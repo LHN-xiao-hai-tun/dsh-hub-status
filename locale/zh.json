@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Hub 状态",
+    "description": "右侧栏面板：显示 agent-comm-hub 是否可达，以及每个 agent 对端的在线 / 排队 / 等待与最后活跃时间。"
+  }
+}

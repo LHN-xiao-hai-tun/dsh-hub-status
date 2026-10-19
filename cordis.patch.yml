@@ -1,0 +1,13 @@
+# Bundle patch layer for dsh-hub-status (host half entry).
+#
+# The inserted row loads this package's main entry (lib/index.js) as a plain
+# Cordis plugin: `inject = ['webServer']` + `apply(ctx)`, which registers the
+# same-origin read-only JSON route /dsh-hub-status/status. The `dsh.client`
+# declaration in package.json makes the web app additionally load ./client
+# (lib/client.js) as the browser half, which registers the right-sidebar tab.
+#
+# No config keys on purpose: exporting a plain-object Config (not a Standard
+# Schema) makes the host fail profile startup with "reading 'validate'".
+- insert:
+    - id: dsh-hub-status
+      name: dsh-hub-status

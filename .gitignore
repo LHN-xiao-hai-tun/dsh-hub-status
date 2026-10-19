@@ -1,0 +1,13 @@
+node_modules/
+*.bak*
+.bak/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+npm-debug.log*
+yarn-error.log*
+.pnpm-store/
+*.tgz
