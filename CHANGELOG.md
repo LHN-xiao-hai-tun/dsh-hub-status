@@ -11,7 +11,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **显示元数据（`locale/en.json` + `locale/zh.json` + `icon.svg`）**。插件管理器与设置页
+- **仓库级工程件**：`SECURITY.md`（只读安全面 + 私密漏洞报告渠道）、`CONTRIBUTING.md`
+  （改完必跑 `npm run check` + `npm run test:live` · `files` 白名单别漏件 · `cordis.patch.yml`
+  别加 config 键）、`.gitignore`。后两件已加进 `package.json` 的 `files` 白名单。
+- **GitHub 仓库与 Release**：<https://github.com/LHN-xiao-hai-tun/dsh-hub-status>，
+  `v0.1.3` 带 `.tgz` 资产（24,214 B · 15 件）。
+- **README §3.1** 装法改为发布后的真实路径：主推 `dsh plugin --profile desktop add github:LHN-xiao-hai-tun/dsh-hub-status`
+  + 必跑的 `enable.ps1`；另列从 Release `.tgz` 装的 §3.1b（避开 pnpm 的 `ERR_PNPM_GIT_RESOLVE_FAILED`）。
+  README §4 / §7 里指向本机 `_支撑\工具\插件包\` 的开发期路径一并改为装法无关的表述。
+- README 头部版本 `0.1.0` → `0.1.3`，并加上仓库与 Release 链接。
+
+### Changed
+
+- 显示元数据（`locale/en.json` + `locale/zh.json` + `icon.svg`）。插件管理器与设置页
   会在**不激活插件**的前提下读 `meta.title` / `meta.description` 与图标；此前本插件三样
   全无，管理器里只显示包名和英文 `description`，中文界面读不到中文名，也没有图标。
   依据 = 官方 `cordis-plugin-development` 技能 `references/host-plugin.md`

@@ -3,7 +3,8 @@
 DSH 插件包（bundle）：在 Web GUI 的**右侧栏**加一个只读的「**Hub 状态**」页签，显示本机  
 agent-comm-hub 的 peer 清单与队列概况。
 
-- 版本：`0.1.0`
+- 版本：`0.1.3`
+- 仓库：<https://github.com/LHN-xiao-hai-tun/dsh-hub-status>（Release 见 [releases](https://github.com/LHN-xiao-hai-tun/dsh-hub-status/releases)）
 - 形态：一个 bundle，**两半** —— 宿主半边（`lib/index.js`）+ 浏览器半边（`lib/client.js`）
 - 依赖：**零运行时依赖**（只用宿主自带的 `fetch` 与宿主注入的 `webServer` / `react`）
 - 性质：**只读观测**。本插件不发送消息、不建组、不派任务、不改任何 Hub 状态。
@@ -57,17 +58,29 @@ Hub 的 MCP 端点是 `http://127.0.0.1:18764/mcp`（无鉴权，仅回环）。
 
 安装会改动 DSH profile，**须先取得用户明确同意**（本插件建件时并未安装）。
 
-### 3.1 一条命令
+### 3.1 一条命令（从 GitHub 仓库装）
 
-在**本目录**里跑：
+⚠️ 安装会改动 DSH profile（写 `dsh.profile.bundles`），**须先取得用户明确同意**。
 
+```powershell
+dsh plugin --profile desktop add github:LHN-xiao-hai-tun/dsh-hub-status
+powershell -ExecutionPolicy Bypass -File .\enable.ps1 -Profile desktop
 ```
-powershell -ExecutionPolicy Bypass -File .\install.ps1
-```
 
-它做四件事：移除旧的 junction 残留 → 调 `dsh plugin --profile desktop add file:<本目录>`
-→ 把 `dsh-hub-status` 补进 `dsh.profile.bundles`（写前备份 `package.json`）→ 提示重启。
-路径由 `$PSScriptRoot` 自己算，在哪个目录执行都行。
+**两步都要跑。** 第二步不是可选的：DSH 插件管理器只写 `dependencies`，**不写
+`dsh.profile.bundles`**，不补的话插件卡片在但功能 404（宿主行为，非插件 bug）。
+`enable.ps1` 是幂等的 —— 已经在 bundles 里就不写盘、不设备份。
+
+> `enable.ps1` 要从**仓库目录**里跑（它用 `$PSScriptRoot` 定位），在哪个目录执行都行。
+
+### 3.1b 从 Release 的 `.tgz` 装（推荐 · 避开 pnpm 的 `ERR_PNPM_GIT_RESOLVE_FAILED`）
+
+```powershell
+# 1) 下载 https://github.com/LHN-xiao-hai-tun/dsh-hub-status/releases/latest 里的 .tgz
+# 2) 解压，然后：
+dsh plugin --profile desktop add file:<解压目录的绝对路径>
+powershell -ExecutionPolicy Bypass -File <解压目录>\enable.ps1 -Profile desktop
+```
 
 | 参数 | 用途 |
 |---|---|
@@ -78,7 +91,7 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 ### 3.2 分两步（想自己控制时）
 
 ```
-plugin_manager(action="install_bundle", target="D:\\RJ\\ai\\DSH工作区\\_支撑\\工具\\插件包\\dsh-hub-status")
+plugin_manager(action="install_bundle", target="github:LHN-xiao-hai-tun/dsh-hub-status")
 powershell -ExecutionPolicy Bypass -File .\enable.ps1 -Profile desktop
 ```
 
@@ -101,7 +114,8 @@ plugin_manager(action="remove_bundle", target="dsh-hub-status")
 回滚 = 卸载 bundle + 重启宿主。若只想临时停用，可用  
 `plugin_manager(action="set_bundle", target="dsh-hub-status", enabled=false)`。
 
-本插件**不写入** profile 之外的任何位置；卸载后磁盘上只留下本目录（`工具\插件包\dsh-hub-status\`），  
+本插件**不写入** profile 之外的任何位置；卸载后磁盘上只留下装它的那个目录
+（GitHub 装法下是 `node_modules\dsh-hub-status`，`file:` 装法下是你指定的目录），
 可整目录删除。
 
 ## 5. 只读保证
@@ -131,8 +145,8 @@ plugin_manager(action="remove_bundle", target="dsh-hub-status")
 ```
 dsh-hub-status/
 ├── package.json           # manifest：main = 宿主半边；dsh.bundle.patch；dsh.client（web）
-├── cordis.patch.yml       # bundle 装配补丁（insert id/name）
-├── install.ps1            # 一键安装：装包 + 补 bundles（UTF-8 BOM · 5,387 B）
+├── cordis.patch.yml       # bundle 装配补丁（insert id/name；故意不带 config 键）
+├── install.ps1            # 本地一键安装：清 junction + 装包 + 补 bundles（UTF-8 BOM · 5,387 B）
 ├── enable.ps1             # 只补 dsh.profile.bundles（幂等 · UTF-8 BOM · 3,613 B）
 ├── icon.svg               # 插件图标（原创 · 64×64 · 面板与商店卡片用）
 ├── locale/
@@ -141,6 +155,9 @@ dsh-hub-status/
 ├── README.md              # 本文件
 ├── CHANGELOG.md           # 变更日志（Keep a Changelog 体例）
 ├── LICENSE                # MIT
+├── SECURITY.md            # 安全政策（只读面 / 报告漏洞渠道）
+├── CONTRIBUTING.md        # 贡献指南（改完必跑 check + test:live）
+├── .gitignore
 ├── lib/
 │   ├── index.js           # 宿主半边：只读握手 + 同源路由
 │   └── client.js          # 浏览器半边：右侧栏页签与面板
