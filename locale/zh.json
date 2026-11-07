@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Hub 状态",
-    "description": "右侧栏面板：显示 agent-comm-hub 是否可达，以及每个 agent 对端的在线 / 排队 / 等待与最后活跃时间。"
+    "title": "Hub 状态与聊天室",
+    "description": "右侧栏两个面板：① Hub 状态 —— agent-comm-hub 是否可达，每个 agent 对端的在线 / 排队 / 等待与最后活跃时间；② 聊天室 —— 多台设备共用的留言板，看最新消息，也能直接说一句。"
   }
 }

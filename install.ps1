@@ -1,4 +1,4 @@
-﻿# dsh-hub-status 一键安装脚本
+# dsh-hub-status 一键安装脚本
 #
 # 把 dsh-hub-status 装进 DSH profile，并补齐 dsh.profile.bundles，
 # 让宿主半在重启后真正加载。装完请重启 DSH Desktop。
@@ -37,8 +37,9 @@ if (-not (Test-Path (Join-Path $sourceDir 'package.json'))) {
 function Find-DshCli {
   $cmd = Get-Command dsh -ErrorAction SilentlyContinue
   if ($cmd) { return $cmd.Source }
+  # 桌面端默认装法：装到用户目录或 Program Files。别在这里写死某个开发机的路径 ——
+  # 别人拿到这个脚本时那条路径一定不存在。
   $candidates = @(
-    'D:\RJ\ai\DSH-desktop\resources\runtime\cli\bin\dsh.cmd',
     (Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd'),
     (Join-Path $env:ProgramFiles 'DeepSeek Harness\resources\runtime\cli\bin\dsh.cmd')
   )

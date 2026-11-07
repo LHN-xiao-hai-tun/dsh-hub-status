@@ -7,23 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.1] — 2026-11-07
+
+首个**可以直接给别人用**的版本：不再依赖维护者本机上的任何路径或人名。
+
+### Changed
+
+- **聊天室日志路径不再硬编码**。解析顺序（高 → 低）：
+  `config.chatHubFile` → 环境变量 `DSH_HUB_CHAT_FILE` → `<DSH_HOME>/hub.jsonl`
+  （`DSH_HOME` 缺失时 `<用户主目录>/.dsh/hub.jsonl`）。
+  新增 `resolveChatHubFile(config, env)` / `resolvePluginConfig(config, env)`，
+  `env` 可注入，测试不碰真环境。
+- **说话人 / 配色 / 署名改为配置**：`config.speakers`（`[{ name, color?, label? }]`，顺序决定
+  默认配色）与 `config.selfNames`（靠右显示、发消息署名，取第一个）。
+  默认值是中性的 `me` / `peer` 与 `["me"]` —— 仓库里不再有任何真名。
+- **新增同源路由 `GET /dsh-hub-status/config`**：宿主把解析好的说话人 / 署名交给浏览器半边。
+  为什么必须过宿主：浏览器半是另一份打包产物，读不到插件配置；两边必须用同一份，
+  否则配色与署名会各说各话。
+- `lib/client.js` 的 `CHAT_COLORS` 常量表 → `CHAT_PALETTE` 调色板 + 配置驱动的
+  `chatColorsFrom(speakers)`；`chatColorOf(name, config)` / `chatIsSelf(name, config)`
+  改为接收配置（React 状态，拉到配置后换对象触发重渲染）。发消息的 `from` 由
+  `chatSelfNames(config)[0]` 决定，不再是一个写死的字符串。
+- 宿主半边：`readChatTail(hubFile, limit)` 与 `appendChatMessage(text, from, { hubFile, selfNames })`
+  带上了路径 / 署名参数；`createChatHandler({ hubFile, selfNames })`。
+
+### Added
+
+- `test/config.test.mjs` + `npm run test:config`：路径解析优先级、说话人与署名的默认值 /
+  去重 / 非法项、聊天室尾部读取与坏行、缺文件时的人话、配置路由只读。**不连网、不碰真日志**
+  （临时目录造假日志，跑完删掉）。
+- `cordis.patch.yml` 顶部写明「配置怎么给」，并保留「为什么不要导出 `Config`」的原因。
+
+### Fixed
+
+- **聊天室文件不存在时不再冒原始 `ENOENT`**：现在回 `ok:false` + 一句人话
+  「没找到聊天室文件：<路径>（可用环境变量 DSH_HUB_CHAT_FILE 或插件配置 chatHubFile 指定）」。
+- `install.ps1` 的 CLI 探测列表去掉了维护者本机的一个绝对路径（别人机器上必然不存在）。
+- `LICENSE` / `icon.svg` / 各文件注释里的维护者署名与个人原话全部移除或改写成中性表述
+  （公开发布前做的一次彻底脱敏：本仓库历史上 `LICENSE` 与图标注释里带着真名）。
+
+## [0.2.0] — 2026-11-06（补记）
+
+这一版当时没有记 CHANGELOG，发 0.2.1 时一并补上。
+
+### Added
+
+- **第二个右侧栏页签「聊天室」**，与「Hub 状态」并列（独立的 tab 类型 —— 一个类型只能认领
+  一个 body，挂两个 guide 条目会让第二个永远派发不到）。
+- **全屏聊天室视图**：注册到 `conversation.view`（切过去占满会话区，两侧栏仍在），
+  而不是 `shell.overlay`（会盖住两侧栏且不占布局）。
+- 气泡式消息：自己的靠右、别人的靠左、每人一套配色；`via` 字段显示「· 经 xxx」。
+- **坏行提示**：日志里有解析不了的行时显式提示条数与行号。
+- 发送：`Ctrl+Enter` 发送 / `Enter` 换行；**点发送立刻清空输入框**，失败把内容放回去（不丢字）。
+- 聊天室日志按 `{"seq","from","at","text"}` 单行 JSON 追加，`seq` 取「读到最大 + 1」。
+
 ## [0.1.3] — 2026-10-19
 
 ### Added
 
-- **仓库级工程件**：`SECURITY.md`（只读安全面 + 私密漏洞报告渠道）、`CONTRIBUTING.md`
-  （改完必跑 `npm run check` + `npm run test:live` · `files` 白名单别漏件 · `cordis.patch.yml`
-  别加 config 键）、`.gitignore`。后两件已加进 `package.json` 的 `files` 白名单。
-- **GitHub 仓库与 Release**：<https://github.com/LHN-xiao-hai-tun/dsh-hub-status>，
-  `v0.1.3` 带 `.tgz` 资产（24,214 B · 15 件）。
-- **README §3.1** 装法改为发布后的真实路径：主推 `dsh plugin --profile desktop add github:LHN-xiao-hai-tun/dsh-hub-status`
-  + 必跑的 `enable.ps1`；另列从 Release `.tgz` 装的 §3.1b（避开 pnpm 的 `ERR_PNPM_GIT_RESOLVE_FAILED`）。
-  README §4 / §7 里指向本机 `_支撑\工具\插件包\` 的开发期路径一并改为装法无关的表述。
-- README 头部版本 `0.1.0` → `0.1.3`，并加上仓库与 Release 链接。
-
-### Changed
-
-- 显示元数据（`locale/en.json` + `locale/zh.json` + `icon.svg`）。插件管理器与设置页
+- **显示元数据（`locale/en.json` + `locale/zh.json` + `icon.svg`）**。插件管理器与设置页
   会在**不激活插件**的前提下读 `meta.title` / `meta.description` 与图标；此前本插件三样
   全无，管理器里只显示包名和英文 `description`，中文界面读不到中文名，也没有图标。
   依据 = 官方 `cordis-plugin-development` 技能 `references/host-plugin.md`

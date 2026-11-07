@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Hub status">
-  <!-- dsh-hub-status · 原创图标 (MIT, 2026 暮) -->
+  <!-- dsh-hub-status · original icon (MIT, 2026) -->
   <!-- 语义：中心 = 本机 Hub，三个外圈节点 = 已连接的 agent peer，连线 = 桥接通道 -->
   <g fill="none" stroke="#2f6f9e" stroke-width="3.2" stroke-linecap="round">
     <path d="M32 32 L32 13"/>

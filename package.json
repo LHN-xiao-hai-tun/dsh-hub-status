@@ -1,7 +1,7 @@
 {
   "name": "dsh-hub-status",
-  "version": "0.1.3",
-  "description": "Hub status panel for DeepSeek Harness: a right-sidebar tab that shows agent-comm-hub reachability plus per-peer online/queued/waiting/lastSeen, fed by a same-origin host route which calls the hub's read-only bridge_status MCP tool.",
+  "version": "0.2.1",
+  "description": "Two right-sidebar tabs for DeepSeek Harness: Hub status (agent-comm-hub reachability plus per-peer online/queued/waiting/lastSeen, via a same-origin host route that calls the hub's read-only bridge_status MCP tool) and Chat room (a shared append-only JSONL log that several devices talk through; reads the latest lines and posts one directly). The chat log path and the speakers shown in that panel are configurable.",
   "type": "module",
   "license": "MIT",
   "engines": {
@@ -26,13 +26,12 @@
     "README.md",
     "CHANGELOG.md",
     "LICENSE",
-    "SECURITY.md",
-    "CONTRIBUTING.md",
     "locale/*.json",
     "icon.svg"
   ],
   "scripts": {
     "check": "node --check lib/index.js && node --check lib/client.js && node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8'))\"",
+    "test:config": "node test/config.test.mjs",
     "test:live": "node test/hub-fetch.test.mjs"
   },
   "peerDependencies": {

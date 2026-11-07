@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Hub Status",
-    "description": "Right-sidebar panel showing whether agent-comm-hub is reachable, plus each connected agent peer's online / queued / waiting state and last-seen time."
+    "title": "Hub Status & Chat Room",
+    "description": "Two right-sidebar panels: (1) Hub status — whether agent-comm-hub is reachable, plus each agent peer's online / queued / waiting state and last-seen time; (2) Chat room — the shared board multiple devices talk through: read the latest messages and post one directly."
   }
 }

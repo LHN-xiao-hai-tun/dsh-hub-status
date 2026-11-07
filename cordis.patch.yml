@@ -1,13 +1,35 @@
 # Bundle patch layer for dsh-hub-status (host half entry).
 #
 # The inserted row loads this package's main entry (lib/index.js) as a plain
-# Cordis plugin: `inject = ['webServer']` + `apply(ctx)`, which registers the
-# same-origin read-only JSON route /dsh-hub-status/status. The `dsh.client`
-# declaration in package.json makes the web app additionally load ./client
-# (lib/client.js) as the browser half, which registers the right-sidebar tab.
+# Cordis plugin: `inject = ['webServer']` + `apply(ctx, config)`, which registers
+# three same-origin routes:
+#   GET /dsh-hub-status/status   只读 Hub 状态（tools/call bridge_status）
+#   GET /dsh-hub-status/chat     读聊天室日志尾部；POST 追加一条
+#   GET /dsh-hub-status/config   把说话人 / 配色 / 署名交给浏览器半
+# The `dsh.client` declaration in package.json makes the web app additionally load
+# ./client (lib/client.js) as the browser half, which registers the two right-
+# sidebar tabs.
 #
-# No config keys on purpose: exporting a plain-object Config (not a Standard
-# Schema) makes the host fail profile startup with "reading 'validate'".
+# ⛔ 不要给插件加 `export const Config`：导出**普通对象**（而不是 Standard Schema）
+#    会让宿主在 profile 启动时报 "reading 'validate'" 并起不来（实测过的启动崩溃）。
+#    因此下面这行**故意不带 config 键**。
+#
+# 配置怎么给（0.2.1 起支持，见 README §配置）：
+#   ① 环境变量（最省事，不需要改装配层）：DSH_HUB_CHAT_FILE=<聊天室日志绝对路径>
+#   ② 装配层给这一行传 config —— 插件用容错方式读，不做 schema 校验：
+#
+#        - insert:
+#            - id: dsh-hub-status
+#              name: dsh-hub-status
+#              config:
+#                chatHubFile: /path/to/hub.jsonl
+#                speakers:
+#                  - { name: me,   color: "#60a5fa" }
+#                  - { name: peer }
+#                selfNames: [me]
+#
+#   ③ 两者都不给时的默认值：<DSH_HOME>/hub.jsonl（DSH_HOME 缺失时 <用户主目录>/.dsh/hub.jsonl），
+#      说话人 me / peer，署名 me。三者都没有任何真名或本机绝对路径。
 - insert:
     - id: dsh-hub-status
       name: dsh-hub-status
