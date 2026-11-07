@@ -105,7 +105,8 @@ powershell -ExecutionPolicy Bypass -File .\enable.ps1 -Profile desktop
 ### 3.2 从 Release 的 `.tgz` 装（推荐 · 避开 pnpm 的 `ERR_PNPM_GIT_RESOLVE_FAILED`）
 
 ```powershell
-# 1) 下载 https://github.com/LHN-xiao-hai-tun/dsh-hub-status/releases/latest 里的 .tgz
+# 1) 下载 https://github.com/LHN-xiao-hai-tun/dsh-hub-status/releases 里 v0.2.1 那个 .tgz
+#    （releases 里暂时只有 v0.1.3 的包时，用上面 3.1 的 GitHub 装法，别装旧包）
 # 2) 解压，然后：
 dsh plugin --profile desktop add file:<解压目录的绝对路径>
 powershell -ExecutionPolicy Bypass -File <解压目录>\enable.ps1 -Profile desktop
