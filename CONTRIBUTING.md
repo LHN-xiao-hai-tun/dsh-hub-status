@@ -22,6 +22,10 @@ npm run test:live      # 真连本机 Hub 的活体测试
 `test:live` 需要 **Hub 在跑**（`Get-NetTCPConnection -LocalPort 18764` 查 PID）。Hub 没启动时测试会失败并打印原因 —— **那是预期的，别把它当"我的改动挂了"**，先把 Hub 拉起来再跑。
 `test:config` 不需要 Hub：它只在临时目录造一个假日志，跑完删掉。
 
+公共 CI 运行 `npm run check`、`npm run test:config` 和 `npm run pack:verified`，不依赖真实 Hub。
+`pack:verified` 比较包内文件与源码，在临时目录离线安装并重跑包内配置测试；产物与逐件校验和位于 `dist/`。
+本地真实 Hub 检查仍按上表单列；没有实际运行时应明确记为未验，不能用公共 CI 结果替代。
+
 > ⛔ **「看代码觉得对」不算通过** —— 必须看到上面三条 EXIT 0。
 
 ### 2. `files` 白名单别漏件
@@ -30,7 +34,8 @@ npm run test:live      # 真连本机 Hub 的活体测试
 
 ```
 lib / test / cordis.patch.yml / install.ps1 / enable.ps1 /
-README.md / CHANGELOG.md / LICENSE / locale/*.json / icon.svg
+README.md / CHANGELOG.md / LICENSE / locale/*.json / icon.svg /
+scripts/pack-verified.mjs
 ```
 
 **新增文件时先问：它需要进包吗？** 要进就往 `files` 里加；不要进（比如 `.github/`、开发用的临时脚本）就别加。

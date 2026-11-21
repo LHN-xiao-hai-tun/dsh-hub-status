@@ -18,6 +18,7 @@
     "./icon": "./icon.svg"
   },
   "files": [
+    "scripts/pack-verified.mjs",
     "lib",
     "test",
     "cordis.patch.yml",
@@ -32,6 +33,7 @@
   "scripts": {
     "check": "node --check lib/index.js && node --check lib/client.js && node -e \"JSON.parse(require('fs').readFileSync('package.json','utf8'))\"",
     "test:config": "node test/config.test.mjs",
+    "pack:verified": "node scripts/pack-verified.mjs",
     "test:live": "node test/hub-fetch.test.mjs"
   },
   "peerDependencies": {

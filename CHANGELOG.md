@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Windows / Ubuntu、Node 22.19.0 / 24 的离线配置与路由 CI。
+- `npm run pack:verified`：核对包内文件与源码、安装脚本 BOM，在临时目录离线安装并运行包内测试；输出包、SHA-256 与逐件清单。CI 保留候选工件，不自动发布或修改 DSH profile。
+
+### Fixed
+
+- `install.ps1` 补 UTF-8 BOM，保持正文不变，符合 Windows PowerShell 5.1 的既有安装要求。
+
 ## [0.2.1] — 2026-11-07
 
 首个**可以直接给别人用**的版本：不再依赖维护者本机上的任何路径或人名。
