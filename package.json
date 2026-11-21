@@ -1,7 +1,7 @@
 {
   "name": "dsh-hub-status",
   "version": "0.2.1",
-  "description": "Two right-sidebar tabs for DeepSeek Harness: Hub status (agent-comm-hub reachability plus per-peer online/queued/waiting/lastSeen, via a same-origin host route that calls the hub's read-only bridge_status MCP tool) and Chat room (a shared append-only JSONL log that several devices talk through; reads the latest lines and posts one directly). The chat log path and the speakers shown in that panel are configurable.",
+  "description": "为 DeepSeek Harness 提供右侧栏的“Hub 状态”和“聊天室”两个页签：通过宿主同源接口只读查询 agent-comm-hub 的连通性、成员在线状态及队列；读取多设备共用的追加式 JSONL 聊天记录，并支持发送消息。聊天记录路径、说话人及署名均可配置。",
   "type": "module",
   "license": "MIT",
   "engines": {

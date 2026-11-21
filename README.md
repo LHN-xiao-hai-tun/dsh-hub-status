@@ -273,7 +273,7 @@ dsh-hub-status/
 `meta.title` / `meta.description` 和图标，**不需要先激活插件**。这条要求来自
 官方 `cordis-plugin-development` 技能的 `references/host-plugin.md`
 「Display metadata and icon」小节；没有这两样，插件在管理器里只显示包名和一行
-英文 `description`，中文界面也读不到中文名。
+`description`，中文界面也读不到本地化名称。
 
 ## 9. 自检
 
