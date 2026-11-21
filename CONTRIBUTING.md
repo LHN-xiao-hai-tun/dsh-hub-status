@@ -1,4 +1,4 @@
-# 贡献指南（Contributing）
+# 贡献指南
 
 感谢愿意给 `dsh-hub-status` 出力。这个插件很小（两个 `lib` 文件 + 两个测试），**改动面窄但纪律硬**。
 
@@ -22,6 +22,10 @@ npm run test:live      # 真连本机 Hub 的活体测试
 `test:live` 需要 **Hub 在跑**（`Get-NetTCPConnection -LocalPort 18764` 查 PID）。Hub 没启动时测试会失败并打印原因 —— **那是预期的，别把它当"我的改动挂了"**，先把 Hub 拉起来再跑。
 `test:config` 不需要 Hub：它只在临时目录造一个假日志，跑完删掉。
 
+公共 CI 运行 `npm run check`、`npm run test:config` 和 `npm run pack:verified`，不依赖真实 Hub。
+`pack:verified` 比较包内文件与源码，在临时目录离线安装并重跑包内配置测试；产物与逐件校验和位于 `dist/`。
+本地真实 Hub 检查仍按上表单列；没有实际运行时应明确记为未验，不能用公共 CI 结果替代。
+
 > ⛔ **「看代码觉得对」不算通过** —— 必须看到上面三条 EXIT 0。
 
 ### 2. `files` 白名单别漏件
@@ -30,7 +34,8 @@ npm run test:live      # 真连本机 Hub 的活体测试
 
 ```
 lib / test / cordis.patch.yml / install.ps1 / enable.ps1 /
-README.md / CHANGELOG.md / LICENSE / locale/*.json / icon.svg
+README.md / CHANGELOG.md / LICENSE / locale/*.json / icon.svg /
+scripts/pack-verified.mjs
 ```
 
 **新增文件时先问：它需要进包吗？** 要进就往 `files` 里加；不要进（比如 `.github/`、开发用的临时脚本）就别加。
@@ -65,7 +70,8 @@ README.md / CHANGELOG.md / LICENSE / locale/*.json / icon.svg
 
 ## 提交规范
 
-- 一个提交一个主题；commit message 用祈使句
+- 一个提交一个主题；提交说明用中文描述实际改动。
+- PR 标题、正文、仓库文档、代码注释和自定义检查提示以中文为主。命令、代码标识、接口字段和标准文件名保留原写法；引用外部报错时保留原文并补中文解释。
 - 改了行为就同步 `CHANGELOG.md`（Keep a Changelog 体例）与 `README.md` 的「已知边界」节
 - 版本号口径：`package.json` 是唯一权威；`CHANGELOG.md` / `README.md` 里的版本是副本，**改了 `package.json` 就要全查**
 - ⛔ 提交前跑一次脱敏检查：任何本机绝对路径、用户名、局域网地址、私人昵称都不该出现在这个仓库里

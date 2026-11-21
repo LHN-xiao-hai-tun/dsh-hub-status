@@ -1,17 +1,26 @@
-# Changelog
+# 变更记录
 
-All notable changes to this project are documented in this file.
+本文件记录项目的重要变更。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+记录格式参照 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)，版本号遵循[语义化版本规范](https://semver.org/spec/v2.0.0.html)。
 
-## [Unreleased]
+## [尚未发布]
+
+### 新增
+
+- 仓库说明以中文为主；工作流名称、步骤与打包提示使用中文，便于直接查看检查结果。
+- Windows / Ubuntu、Node 22.19.0 / 24 的离线配置与路由 CI。
+- `npm run pack:verified`：核对包内文件与源码、安装脚本 BOM，在临时目录离线安装并运行包内测试；输出包、SHA-256 与逐件清单。CI 保留候选工件，不自动发布或修改 DSH profile。
+
+### 修复
+
+- `install.ps1` 补 UTF-8 BOM，保持正文不变，符合 Windows PowerShell 5.1 的既有安装要求。
 
 ## [0.2.1] — 2026-11-07
 
 首个**可以直接给别人用**的版本：不再依赖维护者本机上的任何路径或人名。
 
-### Changed
+### 调整
 
 - **聊天室日志路径不再硬编码**。解析顺序（高 → 低）：
   `config.chatHubFile` → 环境变量 `DSH_HUB_CHAT_FILE` → `<DSH_HOME>/hub.jsonl`
@@ -31,14 +40,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 宿主半边：`readChatTail(hubFile, limit)` 与 `appendChatMessage(text, from, { hubFile, selfNames })`
   带上了路径 / 署名参数；`createChatHandler({ hubFile, selfNames })`。
 
-### Added
+### 新增
 
 - `test/config.test.mjs` + `npm run test:config`：路径解析优先级、说话人与署名的默认值 /
   去重 / 非法项、聊天室尾部读取与坏行、缺文件时的人话、配置路由只读。**不连网、不碰真日志**
   （临时目录造假日志，跑完删掉）。
 - `cordis.patch.yml` 顶部写明「配置怎么给」，并保留「为什么不要导出 `Config`」的原因。
 
-### Fixed
+### 修复
 
 - **聊天室文件不存在时不再冒原始 `ENOENT`**：现在回 `ok:false` + 一句人话
   「没找到聊天室文件：<路径>（可用环境变量 DSH_HUB_CHAT_FILE 或插件配置 chatHubFile 指定）」。
@@ -50,7 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 这一版当时没有记 CHANGELOG，发 0.2.1 时一并补上。
 
-### Added
+### 新增
 
 - **第二个右侧栏页签「聊天室」**，与「Hub 状态」并列（独立的 tab 类型 —— 一个类型只能认领
   一个 body，挂两个 guide 条目会让第二个永远派发不到）。
@@ -63,7 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.3] — 2026-10-19
 
-### Added
+### 新增
 
 - **显示元数据（`locale/en.json` + `locale/zh.json` + `icon.svg`）**。插件管理器与设置页
   会在**不激活插件**的前提下读 `meta.title` / `meta.description` 与图标；此前本插件三样
@@ -75,7 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.2] — 2026-10-19
 
-### Fixed
+### 修复
 
 - **家族 peer id 漂移导致面板假 `missing`**：面板曾把四个家族 id 写死为
   `codex-mcp-client` / `claude-code` / `qoder-desktop-mcp-host` / `dsh-mcp-client`。
@@ -85,7 +94,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   规范 id，真用的是别名时行尾标 `（别名）`，`peerId` 字段带着真 id 供人工排查。
   两代 id 同时在册时只占一行，多出来的那代落进「其他 peer」，不会被静默吞掉。
 
-### Added
+### 新增
 
 - `antigravity-client` 补进家族名单（第 5 家）。它一直是 Hub 的 live peer，此前只能
   从「其他 peer」里看到，顶部「家族在线」计数不含它。
@@ -95,7 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.1] — 2026-10-19
 
-### Added
+### 新增
 
 - `package.json` 补 `engines.dsh`（`>=0.2.0-rc.1`）、`peerDependencies`
   （`@deepseek-ai/cordis` 与 `@deepseek-ai/dsh-client-ui-sidebar-right`，两者 `optional: true`）
@@ -113,14 +122,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `LICENSE` — MIT 正文。`package.json` 里早写了 `"license": "MIT"`，但仓库里一直没有正文。
 - 本 CHANGELOG。此前变更只散落在 README §9，现在集中到这里，README 只留最近一条。
 
-### Fixed
+### 修复
 
 - `install.ps1` / `enable.ps1` 落盘为 **UTF-8 带 BOM**：不带 BOM 时 Windows
   PowerShell 5.1 会按 GBK 读中文 console 文案，输出变乱码。
 
 ## [0.1.0] — 2026-10-11
 
-### Added
+### 新增
 
 - 首发。宿主半边 `lib/index.js` 注册同源只读路由 `GET /dsh-hub-status/status`，
   走三步 MCP 握手（`initialize` → `notifications/initialized` → `tools/call bridge_status`）
@@ -131,7 +140,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 宿主半边对结果做 5 秒缓存，面板 45 秒刷新一次，可 `?refresh=1` 强刷。
 - `test/hub-fetch.test.mjs` 活体测试：真连本机 Hub，断言 peers ≥ 5 且四家 agent 家族全部可见。
 
-### Fixed
+### 修复
 
 - 页签注册补 `guide` 条目 —— **现象**：宿主路由早已 HTTP 200，右侧栏却看不到页签。
   **根因**：右侧栏的「引导页」是按各已注册类型贡献的 `guide` 条目画入口胶囊的，

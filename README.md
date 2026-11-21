@@ -138,6 +138,29 @@ powershell -ExecutionPolicy Bypass -File .\install.ps1
 - 自检：`npm run check` · `npm run test:config` · `npm run test:live`
   （`test:live` 会真连本机 Hub，Hub 未启动时失败属预期）。
 
+### 3.5 仓库打包与 CI 候选工件
+
+从仓库目录运行：
+
+```powershell
+npm run check
+npm run test:config
+npm run pack:verified
+```
+
+最后一条按 `package.json` 的当前版本打包，逐件比较包内文件与源码，核对安装脚本的 UTF-8 BOM，
+再在临时目录离线安装该 `.tgz`，重跑包内配置与路由测试。输出在 `dist/`：当前版本的 `.tgz`、
+同名 `.sha256` 和逐件 SHA-256 清单 `package-manifest.json`。输出文件已存在时停止，换一个空目录可用
+`npm run pack:verified -- --out <空目录>`。本命令不修改 DSH profile，也不执行 `install.ps1` 或 `enable.ps1`。
+
+仓库 CI 在 Windows / Ubuntu、Node 22.19.0 / 24 上运行这些离线检查，并保留 Ubuntu / Node 24 的
+`verified-package` 工件 14 天。CI 清单记录对应的工作流提交与 ref；本地未设置 GitHub 环境时这两项为 null。
+CI 工件是供审阅和安装验收的候选包，正式 Release 仍以发布页的 tag、对应提交和包校验和为准。
+安装前可用 `Get-FileHash <包路径> -Algorithm SHA256` 与 `.sha256` 对照；解压后沿用 §3.2 的安装步骤。
+
+`npm run test:live` 另需本机 Hub，留作实际宿主的集成验收，不列为公共 CI 条件。临时目录的 npm 安装
+只检查包的内容和可执行性，不代替 DSH 插件管理器安装、宿主重载及两个页签的实际验收。
+
 ## 4. 配置
 
 三项都可选，**都不填时用中性默认值** —— 别人装完直接能用，不会读到你机器上的任何私人路径或名字。
@@ -250,7 +273,7 @@ dsh-hub-status/
 `meta.title` / `meta.description` 和图标，**不需要先激活插件**。这条要求来自
 官方 `cordis-plugin-development` 技能的 `references/host-plugin.md`
 「Display metadata and icon」小节；没有这两样，插件在管理器里只显示包名和一行
-英文 `description`，中文界面也读不到中文名。
+`description`，中文界面也读不到本地化名称。
 
 ## 9. 自检
 

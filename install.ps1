@@ -1,4 +1,4 @@
-# dsh-hub-status 一键安装脚本
+﻿# dsh-hub-status 一键安装脚本
 #
 # 把 dsh-hub-status 装进 DSH profile，并补齐 dsh.profile.bundles，
 # 让宿主半在重启后真正加载。装完请重启 DSH Desktop。
